@@ -25,7 +25,7 @@
                 </element>
             </collection>
         </dataStructure>
-        <string name="Vertex shader" value="#version 400                                                    
+        <string name="Vertex shader" value="#version 400                                  
                                                                  
 layout (location = 0) in vec3 vIn_Pos;
 layout (location = 1) in vec2 vIn_UV;
@@ -44,7 +44,7 @@ void main()
 {                                                              
     gl_Position = u_matWVP * vec4(vIn_Pos, 1.0); 
 }"/>
-        <string name="Fragment shader" value="#version 400                                                    
+        <string name="Fragment shader" value="#version 400                                  
                                                                  
                                         
                                                                  

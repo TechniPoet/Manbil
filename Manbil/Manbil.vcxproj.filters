@@ -429,6 +429,7 @@
     <ClCompile Include="Math\Higher Math\Transform.cpp">
       <Filter>Math\Higher Math</Filter>
     </ClCompile>
+    <ClCompile Include="TestWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input\Input Objects\KeyboardBoolInput.h">
@@ -964,6 +965,7 @@
     <ClInclude Include="Math\Higher Math\Transform.h">
       <Filter>Math\Higher Math</Filter>
     </ClInclude>
+    <ClInclude Include="TestWorld.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Math">

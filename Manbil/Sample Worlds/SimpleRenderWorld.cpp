@@ -141,7 +141,7 @@ void SimpleRenderWorld::InitializeWorld(void)
 	objMesh->SetIndexData(indices, Mesh::BUF_STATIC);
 
     //Move/size the object so that its vertices stay within about the range [0, 1].
-	objTr.SetScale(0.4f);
+	objTr.SetScale(0.4f); 
 	objTr.SetPosition(Vector3f(0.5f, 0.5f, 0.5f));
 
     SetUpMaterial();

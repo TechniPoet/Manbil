@@ -361,6 +361,7 @@ xcopy "$(SolutionDir)\Dependencies\Include In Build\Universal" "$(SolutionDir)\B
     <ClCompile Include="Sample Worlds\SimpleRenderWorld.cpp" />
     <ClCompile Include="Sample Worlds\TerrainWorld.cpp" />
     <ClCompile Include="Sample Worlds\WaterWorld.cpp" />
+    <ClCompile Include="TestWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugAssist.h" />
@@ -542,6 +543,7 @@ xcopy "$(SolutionDir)\Dependencies\Include In Build\Universal" "$(SolutionDir)\B
     <ClInclude Include="Sample Worlds\SimpleRenderWorld.h" />
     <ClInclude Include="Sample Worlds\TerrainWorld.h" />
     <ClInclude Include="Sample Worlds\WaterWorld.h" />
+    <ClInclude Include="TestWorld.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

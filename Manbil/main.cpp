@@ -7,13 +7,14 @@
 #include "Sample Worlds/EditorGUIWorld.h"
 #include "Sample Worlds/AssetImporterWorld.h"
 #include "Sample Worlds/NoiseGenWorld.h"
-
+#include "TestWorld.h"
 
 //TODO: Add a "Skybox" class in "Rendering/Primitives".
 
 
 int main()
 {
+	/*
     SimpleRenderWorld().RunWorld();
     DataNodeRenderWorld().RunWorld();
     WaterWorld().RunWorld();
@@ -23,6 +24,7 @@ int main()
     EditorGUIWorld().RunWorld();
     AssetImporterWorld().RunWorld();
     NoiseGenWorld().RunWorld();
-
+	*/
+	TestWorld().RunWorld();
     return 0;
 }
