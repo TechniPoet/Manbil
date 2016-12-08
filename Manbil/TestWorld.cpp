@@ -89,14 +89,14 @@ void TestWorld::InitializeWorld()
 	RenderIOAttributes vertexAttributes(
 		RenderIOAttributes::Attribute(3, false, "vIn_Pos"));
 
-	mesh.reset(new Mesh(false, PrimitiveTypes::PT_TRIANGLE_LIST));
-	mesh->SetVertexData(verticies, Mesh::BUF_STATIC, vertexAttributes);
-	mesh->SetIndexData(indices, Mesh::BUF_STATIC);
+	b1Mesh.reset(new Mesh(false, PrimitiveTypes::PT_TRIANGLE_LIST));
+	b1Mesh->SetVertexData(verticies, Mesh::BUF_STATIC, vertexAttributes);
+	b1Mesh->SetIndexData(indices, Mesh::BUF_STATIC);
 
-	objTr.SetScale(1);
-	objTr.SetPosition(Vector3f(0.0f, 0.5f, 0.0f));
-	collider.reset(new Box2D(Vector2f(objTr.GetPosition().x, objTr.GetPosition().z),
-		Vector2f(objTr.GetScale().x, objTr.GetScale().z)));
+	b1Transform.SetScale(1);
+	b1Transform.SetPosition(Vector3f(0.0f, 0.5f, 0.0f));
+	b1Collider.reset(new Box2D(Vector2f(b1Transform.GetPosition().x, b1Transform.GetPosition().z),
+		Vector2f(b1Transform.GetScale().x, b1Transform.GetScale().z)));
 	MaterialUsageFlags builtInParams;
 	builtInParams.EnableFlag(MaterialUsageFlags::DNF_USES_WVP_MAT);
 
@@ -128,9 +128,9 @@ void main()
 
 	std::string errMsg;
 	float initialBrightness = 1.0f;
-	materialParams["u_brightness"] =
+	b1MatParams["u_brightness"] =
 		Uniform::MakeF("u_brightness", 1, &initialBrightness);
-	material.reset(new Material(vShader, fShader, materialParams, vertexAttributes,
+	b1Mat.reset(new Material(vShader, fShader, b1MatParams, vertexAttributes,
 		BlendMode::GetOpaque(), errMsg));
 
 	if (errMsg != "") {
@@ -142,15 +142,15 @@ void main()
 }
 void TestWorld::OnWorldEnd()
 {
-	mesh.reset();
-	material.reset();
+	b1Mesh.reset();
+	b1Mat.reset();
 }
 
 void TestWorld::UpdateWorld(float deltaT)
 {
 	cam.Update(deltaT);
 
-	float currentBrightness = materialParams["u_brightness"].Float().GetValue()[0];
+	float currentBrightness = b1MatParams["u_brightness"].Float().GetValue()[0];
 	if (Input.GetBoolInputValue(INPUT_KEY_DARKER)) {
 		currentBrightness -= BRIGHTNESS_PER_SEC * deltaT;
 	}
@@ -159,7 +159,7 @@ void TestWorld::UpdateWorld(float deltaT)
 	}
 	currentBrightness = Mathf::Clamp(currentBrightness, 0.0f, 5.0f);
 
-	materialParams["u_brightness"].Float() = currentBrightness;
+	b1MatParams["u_brightness"].Float() = currentBrightness;
 }
 
 void TestWorld::RenderOpenGL(float deltaT)
@@ -183,7 +183,7 @@ void TestWorld::RenderOpenGL(float deltaT)
 	Viewport view(0, 0, GetWindow()->getSize().x, GetWindow()->getSize().y);
 	view.Use();
 
-	material->Render(*mesh,  objTr, cameraData, materialParams);
+	b1Mat->Render(*b1Mesh,  b1Transform, cameraData, b1MatParams);
 }
 
 void TestWorld::OnInitializeError(std::string errorMsg)
