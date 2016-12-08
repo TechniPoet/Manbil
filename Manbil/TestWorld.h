@@ -25,4 +25,14 @@ protected:
 private:
 
 	MovingCamera cam;
+
+	//A mesh to be drawn.
+	std::unique_ptr<Mesh> mesh;
+
+	std::unique_ptr<Material> material;
+	UniformDictionary materialParams;
+
+
+	//The position, rotation, and scale of the mesh.
+	Transform objTr;
 };
