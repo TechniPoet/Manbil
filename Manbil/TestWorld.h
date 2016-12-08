@@ -28,12 +28,15 @@ private:
 
 	//A mesh to be drawn.
 	std::unique_ptr<Mesh> b1Mesh;
-
 	std::unique_ptr<Material> b1Mat;
 	UniformDictionary b1MatParams;
-
 	std::unique_ptr<Box2D> b1Collider;
-
 	//The position, rotation, and scale of the mesh.
 	Transform b1Transform;
+
+	//A mesh to be drawn.
+	std::unique_ptr<Mesh> b2Mesh;
+	std::unique_ptr<Box2D> b2Collider;
+	//The position, rotation, and scale of the mesh.
+	Transform b2Transform;
 };

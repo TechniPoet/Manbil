@@ -1,7 +1,7 @@
 #include "TestWorld.h"
 #include "Input\Input.hpp"
 #include <iostream>
-
+#include "Rendering\Primitives\PrimitiveGenerator.h"
 
 
 const Vector2u START_SIZE(800, 600);
@@ -10,8 +10,8 @@ const Vector3f CAM_START_POS(0.0f, 0.0f, 0.0f),
 				CAM_START_FORWARD(0.0f, 1.0f, 0.0f),
 				CAM_UPWARD(0.0f, 0.0f, 1.0f);
 
-const float CAM_MOVE_SPEED = 10.0f,
-			CAM_TURN_SPEED = 1.5f;
+const float CAM_MOVE_SPEED = 0,
+			CAM_TURN_SPEED = 0;
 
 const float CAM_FOV_DEGREES = 60.0f,
 			CAM_ZNEAR = 0.01f,
@@ -63,11 +63,12 @@ void TestWorld::InitializeWorld()
 		BoolInput::ValueStates::IsDown);
 	Input.AddBoolInput(INPUT_KEY_DARKER, BoolInputPtr(inputDarker));
 	Input.AddBoolInput(INPUT_KEY_BRIGHTER, BoolInputPtr(inputBrighter));
+	/*
 	struct MyVertex {
 		Vector3f Pos;
 		MyVertex(const Vector3f& pos) : Pos(pos) { }
 	};
-	std::vector<MyVertex> verticies = {
+	std::vector<MyVertex> vertices = {
 		MyVertex(Vector3f(0, 0, 0)),
 		MyVertex(Vector3f(0, 0, 1)),
 		MyVertex(Vector3f(0, 1, 0)),
@@ -85,16 +86,20 @@ void TestWorld::InitializeWorld()
 		4, 5, 6,	5, 7, 6,
 		1, 3, 5,	7, 5, 3,
 	};
-
+	
 	RenderIOAttributes vertexAttributes(
 		RenderIOAttributes::Attribute(3, false, "vIn_Pos"));
+	*/
+	RenderIOAttributes vertexAttributes = VertexPosUVNormal::GetVertexAttributes();
+	std::vector<VertexPosUVNormal> vertices;
+	std::vector<unsigned int> indices;
 
+	PrimitiveGenerator::GenerateCube(vertices, indices, false, false);
 	b1Mesh.reset(new Mesh(false, PrimitiveTypes::PT_TRIANGLE_LIST));
-	b1Mesh->SetVertexData(verticies, Mesh::BUF_STATIC, vertexAttributes);
+	b1Mesh->SetVertexData(vertices, Mesh::BUF_STATIC, vertexAttributes);
 	b1Mesh->SetIndexData(indices, Mesh::BUF_STATIC);
-
 	b1Transform.SetScale(1);
-	b1Transform.SetPosition(Vector3f(0.0f, 0.5f, 0.0f));
+	b1Transform.SetPosition(Vector3f(0.0f, 3.0f, 0.0f));
 	b1Collider.reset(new Box2D(Vector2f(b1Transform.GetPosition().x, b1Transform.GetPosition().z),
 		Vector2f(b1Transform.GetScale().x, b1Transform.GetScale().z)));
 	MaterialUsageFlags builtInParams;
