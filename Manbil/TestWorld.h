@@ -27,14 +27,13 @@ private:
 	MovingCamera cam;
 
 	//A mesh to be drawn.
-	std::unique_ptr<Mesh> mesh;
+	std::unique_ptr<Mesh> b1Mesh;
 
-	std::unique_ptr<Material> material;
-	UniformDictionary materialParams;
+	std::unique_ptr<Material> b1Mat;
+	UniformDictionary b1MatParams;
 
-	std::unique_ptr<Box2D> collider;
-	const Vector2f box1Pos;
-	const Vector2f box1Scale;
+	std::unique_ptr<Box2D> b1Collider;
+
 	//The position, rotation, and scale of the mesh.
-	Transform objTr;
+	Transform b1Transform;
 };
