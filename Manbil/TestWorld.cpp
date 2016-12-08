@@ -1,6 +1,8 @@
 #include "TestWorld.h"
-
+#include "Input\Input.hpp"
 #include <iostream>
+
+
 
 const Vector2u START_SIZE(800, 600);
 
@@ -17,6 +19,11 @@ const float CAM_FOV_DEGREES = 60.0f,
 
 const Vector3f SKY_COLOR(0.65f, 0.75f, 1.0f);
 
+
+const unsigned int INPUT_KEY_BRIGHTER = 123,
+				   INPUT_KEY_DARKER = 321;
+
+const float BRIGHTNESS_PER_SEC = .5f;
 // Constructor
 TestWorld::TestWorld() 
 	: SFMLOpenGLWorld(START_SIZE.x, START_SIZE.y)
@@ -49,6 +56,13 @@ void TestWorld::InitializeWorld()
 	cam.PerspectiveInfo.zNear = CAM_ZNEAR;
 	cam.PerspectiveInfo.zFar = CAM_ZFAR;
 
+
+	auto* inputDarker = new MouseBoolInput(sf::Mouse::Button::Left,
+		BoolInput::ValueStates::IsDown);
+	auto* inputBrighter = new MouseBoolInput(sf::Mouse::Button::Right,
+		BoolInput::ValueStates::IsDown);
+	Input.AddBoolInput(INPUT_KEY_DARKER, BoolInputPtr(inputDarker));
+	Input.AddBoolInput(INPUT_KEY_BRIGHTER, BoolInputPtr(inputBrighter));
 	struct MyVertex {
 		Vector3f Pos;
 		MyVertex(const Vector3f& pos) : Pos(pos) { }
@@ -81,35 +95,41 @@ void TestWorld::InitializeWorld()
 
 	objTr.SetScale(1);
 	objTr.SetPosition(Vector3f(0.0f, 0.5f, 0.0f));
-
+	collider.reset(new Box2D(Vector2f(objTr.GetPosition().x, objTr.GetPosition().z),
+		Vector2f(objTr.GetScale().x, objTr.GetScale().z)));
 	MaterialUsageFlags builtInParams;
 	builtInParams.EnableFlag(MaterialUsageFlags::DNF_USES_WVP_MAT);
 
 	std::string vShader =
 		MaterialConstants::GetVertexHeader(
-			"",
+			"out vec3 vOut_Color;",
 			vertexAttributes,
 			builtInParams);
 	vShader += std::string() + R"(
+uniform float u_brightness;
 void main()
 {
 	gl_Position = )" + MaterialConstants::WVPMatName + R"( * vec4(vIn_Pos, 1.0);
+	vOut_Color = vIn_Pos * u_brightness;
 }
 )";
 	builtInParams.ClearAllFlags();
 	std::string fShader =
 		MaterialConstants::GetFragmentHeader(
-			"",
+			"in vec3 vOut_Color;",
 			"out vec4 fOut_PixelColor;",
 			builtInParams);
 	fShader += std::string() + R"(
 void main()
 {
-	fOut_PixelColor = vec4(1.0, 0.25, 0.25, 1.0);
+	fOut_PixelColor = vec4(vOut_Color, 1.0);
 }
 )";
 
 	std::string errMsg;
+	float initialBrightness = 1.0f;
+	materialParams["u_brightness"] =
+		Uniform::MakeF("u_brightness", 1, &initialBrightness);
 	material.reset(new Material(vShader, fShader, materialParams, vertexAttributes,
 		BlendMode::GetOpaque(), errMsg));
 
@@ -129,6 +149,17 @@ void TestWorld::OnWorldEnd()
 void TestWorld::UpdateWorld(float deltaT)
 {
 	cam.Update(deltaT);
+
+	float currentBrightness = materialParams["u_brightness"].Float().GetValue()[0];
+	if (Input.GetBoolInputValue(INPUT_KEY_DARKER)) {
+		currentBrightness -= BRIGHTNESS_PER_SEC * deltaT;
+	}
+	if (Input.GetBoolInputValue(INPUT_KEY_BRIGHTER)) {
+		currentBrightness += BRIGHTNESS_PER_SEC * deltaT;
+	}
+	currentBrightness = Mathf::Clamp(currentBrightness, 0.0f, 5.0f);
+
+	materialParams["u_brightness"].Float() = currentBrightness;
 }
 
 void TestWorld::RenderOpenGL(float deltaT)

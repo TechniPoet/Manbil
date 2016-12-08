@@ -2,7 +2,7 @@
 
 #include "Game Loop\SFMLOpenGLWorld.h"
 #include "Rendering\Rendering.hpp"
-
+#include "Math\Shapes.hpp"
 #include "Input\MovingCamera.h"
 
 class TestWorld : public SFMLOpenGLWorld 
@@ -32,7 +32,9 @@ private:
 	std::unique_ptr<Material> material;
 	UniformDictionary materialParams;
 
-
+	std::unique_ptr<Box2D> collider;
+	const Vector2f box1Pos;
+	const Vector2f box1Scale;
 	//The position, rotation, and scale of the mesh.
 	Transform objTr;
 };
